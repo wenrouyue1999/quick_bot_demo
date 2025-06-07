@@ -20,7 +20,8 @@ class RedisUtil:
             host=host,
             port=port,
             password=password,
-            db=db
+            db=db,
+            decode_responses=True
         )
         # todo 初始化admin 如果没有则不需要
         self.sadd(config["redisKey"]["adminList"], config["redisKey"]["adminId"])
