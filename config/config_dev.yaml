@@ -1,0 +1,27 @@
+redis:
+  host: 127.0.0.1
+  port: 6379
+  db: 5
+  taskDb: 15
+  password: password
+database:
+  pool_name: mysql_pool
+  pool_size: 10
+  host: 127.0.0.1
+  user: root
+  password: password
+  database: database
+  port: 3306
+  database_uri: 'mysql+pymysql://root:password@127.0.0.1:3306/database'
+cache:
+  RATE_LIMIT_COUNT: 30
+  RATE_LIMIT_WINDOW: 60
+# 此测试 key
+key:
+  api_id: 2040
+  api_hash: b18441a1ff607e10a989891a5462e627
+#需要处理权限就弄
+redisKey:
+  adminId: "6465491588"
+  adminList: "adminList"
+  userBlank: "userBlank"
