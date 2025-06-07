@@ -16,7 +16,7 @@ class ChildPage(BasePage):
     def __init__(self, botData, callbackQuery):
         super().__init__(botData, callbackQuery)
         self.bot_type = "child_bot"
-
+        self.getBotMessage()
     async def returnLast(self, url):
         if url:
             log.info(f"ChildPage returnLast 有参数。。。 进行处理：{url}")
