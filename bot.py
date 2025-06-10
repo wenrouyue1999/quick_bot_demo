@@ -29,7 +29,8 @@ async def is_rate_limited(user_id):
     if current_count > RATE_LIMIT_COUNT:
         log.info(f"用户 {user_id} 超过了速率限制.")
         return False
-    log.info(f"用户 {user_id} 已发出 {current_count} 次请求.")
+    if current_count > 10:
+        log.info(f"用户 {user_id} 已发出 {current_count} 次请求.")
     return True
 
 
@@ -137,7 +138,7 @@ class FatherBot:
 
     async def reply_message_private(self, bot: Client, msg: Message):
         flag = await self.checkUser(msg.from_user.id)
-        log.info("reply_message_private 接收消息了")
+        log.info("reply_message_private 接收消息了（用户回复机器人消息）")
         # log.info(msg)
         if flag and msg.reply_to_message:
             if msg.text is not None:
