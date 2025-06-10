@@ -16,6 +16,7 @@ class Callback:
             ["f|回复", FatherPage, FatherPage.botInput],
             ["f|父机器人下一级", FatherPage, FatherPage.botNext],
             ["f|返回", FatherPage, FatherPage.returnLast],
+            ["f|通用关闭", FatherPage, FatherPage.closeMessage],
             ["c|/start", ChildPage, ChildPage.botStart],
             ["c|回复", ChildPage, ChildPage.botInput],
             ["c|子机器人下一级", ChildPage, ChildPage.botNext],

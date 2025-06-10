@@ -7,7 +7,7 @@
 import copy
 
 from pyrogram.types.user_and_chats import chat_member_updated
-from mode.toujia_user_transfer_group import ToujiaUserTransferGroup
+from mode.group_permission import GroupPermission
 from import_utils import *
 
 config_load = load_config()
@@ -18,13 +18,13 @@ class ChatMemberUpdatedService:
     def __init__(self, bot: Client, updated: chat_member_updated):
         self.bot = bot
         self.updated = updated
-        self.db_group = ToujiaUserTransferGroup(updated.from_user.id, bot.me.id).getByGroupId(updated.chat.id)
-        self.group: Optional[ToujiaUserTransferGroup] = None
+        self.db_group = GroupPermission(updated.from_user.id, bot.me.id).getByGroupId(updated.chat.id)
+        self.group: Optional[GroupPermission] = None
         self.group_link = None
         self.group_username = None
         self.add_or_update = None
 
-    def process_member_update(self, new_owner: str, privileges: Optional[str] = None, is_delete: Optional[str] = None):
+    def processMemberUpdate(self, new_owner: str, privileges: Optional[str] = None, is_delete: Optional[str] = None):
         if self.db_group:
             log.info("存在数据库中，复制对象到group")
             self.group = copy.copy(self.db_group)
@@ -37,9 +37,9 @@ class ChatMemberUpdatedService:
 
         if self.add_or_update == "add":
             log.info("群组/频道未记录，准备新增！")
-            # self.group.add()
+            self.group.add()
         else:
-            # self.group.update()
+            self.group.update()
             log.info("群组/频道已记录，准备修改！")
 
     def joinMember(self):
@@ -56,14 +56,14 @@ class ChatMemberUpdatedService:
         else:
             log.info("不存在数据库中，先不新增。等待权限变更去新增！")
             self.add_or_update = "add"
-            self.group = ToujiaUserTransferGroup(tg_id=self.updated.from_user.id, bot_id=self.bot.me.id,
-                                                 group_id=self.updated.chat.id, group_type=self.updated.chat.type,
-                                                 group_link=self.group_link, group_name=self.updated.chat.title,
-                                                 group_username=self.group_username)
+            self.group = GroupPermission(tg_id=self.updated.from_user.id, bot_id=self.bot.me.id,
+                                         group_id=self.updated.chat.id, group_type=self.updated.chat.type,
+                                         group_link=self.group_link, group_name=self.updated.chat.title,
+                                         group_username=self.group_username)
 
     def removeMember(self):
         log.info("开始处理移除的逻辑")
-        self.process_member_update(new_owner="0", privileges=None, is_delete="1")
+        self.processMemberUpdate(new_owner="0", privileges=None, is_delete="1")
 
     def updateAdmin(self):
         log.info("开始处理管理员权限的逻辑")
@@ -79,10 +79,10 @@ class ChatMemberUpdatedService:
                 new_owner = "0"
         else:
             new_owner = "1"
-        self.process_member_update(new_owner=new_owner, privileges=privileges)
+        self.processMemberUpdate(new_owner=new_owner, privileges=privileges)
 
     def unUpdateAdmin(self):
         log.info("开始处理删除权限的逻辑")
         privileges = str(self.updated.new_chat_member.privileges) if hasattr(self.updated.new_chat_member,
                                                                              'privileges') else None
-        self.process_member_update(new_owner="0", privileges=privileges)
+        self.processMemberUpdate(new_owner="0", privileges=privileges)

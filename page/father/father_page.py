@@ -63,3 +63,8 @@ class FatherPage(BasePage):
         send_text = f"<b>【🌟 {self.bot_type} 🌟】</b>\n\n"
         button_list = InlineKeyboardMarkup([[InlineKeyboardButton(text="无效按钮", callback_data="无效按钮")], ])
         await self.botMessage.returnLastByCallBackQuery(send_text, button_list, "start")
+
+    async def closeMessage(self, url):
+        if url:
+            log.info(f"closeMessage 有参数。。。 进行处理：{url}")
+        await self.botMessage.delete_msg(self.chatId, self.messageId)

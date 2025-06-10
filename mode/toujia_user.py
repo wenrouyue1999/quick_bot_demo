@@ -4,8 +4,6 @@
 # @Time    : 2024/8/26 下午5:42
 # @Author  : wenrouyue
 # @File    : toujia_user.py
-from datetime import datetime
-
 from import_utils import *
 
 
@@ -38,44 +36,3 @@ class ToujiaUser(BaseModel):
                 f"vip_level='{self.vip_level}', vip_validity_time='{self.vip_validity_time}', "
                 f"is_block='{self.is_block}', is_delete='{self.is_delete}', is_copy='{self.is_copy}', "
                 f"update_time='{self.update_time}', create_time='{self.create_time}')>")
-
-    def getUser(self):
-        dbm = DatabaseManager()
-        db_user = dbm.session.query(ToujiaUser).filter_by(tg_id=self.tg_id).first()
-        if db_user:
-            if self.name == db_user.name and self.user_name == db_user.user_name:
-                log.info(f"用户：{self.tg_id} {self.user_name}存在，并且name username未更改，本次不做处理")
-                return db_user
-            else:
-                log.info(f"用户：{self.tg_id} {self.user_name}存在，name username更改，开始修改用户的数据")
-                db_user.name = self.name
-                db_user.user_name = self.user_name
-                dbm.update(db_user)
-                return self
-        else:
-            dbm.add(self)
-            return self
-
-    # @staticmethod
-    # def getNotVipUser():
-    #     dbm = DatabaseManager()
-    #     # 获取今天的开始时间和结束时间
-    #     today_start = datetime.combine(datetime.today(), datetime.min.time())
-    #     today_end = datetime.combine(datetime.today(), datetime.max.time())
-    #     return dbm.execute_sql(
-    #         """select * from toujia_user WHERE vip_level != '0'
-    #         and vip_validity_time>= :today_start
-    #         and vip_validity_time<= :today_end""",
-    #         {'today_start': today_start, 'today_end': today_end})
-
-    @staticmethod
-    def getNotVipUser():
-        dbm = DatabaseManager()
-        # 获取今天的开始时间和结束时间
-        today_start = datetime.combine(datetime.today(), datetime.min.time())
-        today_end = datetime.now()
-        return dbm.session.query(ToujiaUser).filter(
-            ToujiaUser.vip_level != '0',
-            ToujiaUser.vip_validity_time >= today_start,
-            ToujiaUser.vip_validity_time <= today_end
-        ).all()

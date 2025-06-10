@@ -87,6 +87,9 @@ class RedisUtil:
         results = self.redis.smembers(redis_key)
         return {self._decode(member) for member in results}
 
+    def ltrim(self, redis_key, start_index, end_index):
+        return self.redis.ltrim(redis_key, start_index, end_index)
+
     def srem(self, redis_key, value):
         return self.redis.srem(redis_key, value)
 

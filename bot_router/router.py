@@ -17,9 +17,9 @@ class Router:
         self.routes = {}
         call_backs = Callback().get_callbacks()
         for callback in call_backs:
-            self.add_route(callback[0], callback[1], callback[2])
+            self.addRoute(callback[0], callback[1], callback[2])
 
-    def add_route(self, path_pattern, handler_class, handler_function):
+    def addRoute(self, path_pattern, handler_class, handler_function):
         self.routes[path_pattern] = (handler_class, handler_function)
 
     async def route(self, path_pattern, bot: Optional[Client], msg, msg_type):
@@ -69,9 +69,9 @@ class ReplyInput:
         self.routes = {}
         reply_list = Reply().get_reply()
         for reply in reply_list:
-            self.add_input(reply[0], reply[1], reply[2])
+            self.addInput(reply[0], reply[1], reply[2])
 
-    def add_input(self, path_pattern, handler_class, handler_function):
+    def addInput(self, path_pattern, handler_class, handler_function):
         self.routes[path_pattern] = (handler_class, handler_function)
 
     async def replyInput(self, bot, msg):
@@ -118,9 +118,9 @@ class Input:
         #     self.add_input(reply[0], reply[1], reply[2])
         call_backs = Callback().get_callbacks()
         for callback in call_backs:
-            self.add_input(callback[0], callback[1], callback[2])
+            self.addInput(callback[0], callback[1], callback[2])
 
-    def add_input(self, path_pattern, handler_class, handler_function):
+    def addInput(self, path_pattern, handler_class, handler_function):
         self.routes[path_pattern] = (handler_class, handler_function)
 
     async def input(self, bot, msg):

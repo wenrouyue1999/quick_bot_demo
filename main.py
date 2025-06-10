@@ -18,7 +18,7 @@ async def main():
     # todo 无需数据库启动方式 构建ToujiaUserBot对象
     # dbf_bots = [ToujiaUserBot(tg_id='father', name='father', user_name='', bot_token='', bot_name='', bot_flag='1', bot_start_name='' ,bot_username='' , update_time='2024-11-16 08:41:44', create_time='2024-11-16 08:41:44'),
     #             ToujiaUserBot(tg_id='father', name='father', user_name='',bot_token='', bot_name='', bot_flag='1',bot_start_name='', bot_username='',update_time='2024-11-16 08:37:40', create_time='2024-11-16 08:37:40')]
-    dbf_bots = ToujiaUserBot(tg_id="1", name="1", user_name="1").initialize_father()
+    dbf_bots = ToujiaUserBot(tg_id="1", name="1", user_name="1").initializeFather()
     dbc_bots = ToujiaUserBot(tg_id="1", name="1", user_name="1").initialize()
     tasks = []
     for index, bot in enumerate(dbf_bots):

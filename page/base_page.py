@@ -4,13 +4,10 @@
 # @Time    : 2024/8/23 下午7:15
 # @Author  : wenrouyue
 # @File    : father_page.py
-from typing import Optional, Union
+import math
 
-from pyrogram import Client
-from pyrogram.types import Message, CallbackQuery
-
-from utils import common
 from utils.bot_message import BotMessage
+from import_utils import *
 
 
 class BasePage:
@@ -50,3 +47,46 @@ class BasePage:
             self.botMessage = BotMessage(self.bot,
                                          self.baseMsg)
             return self.botMessage
+
+    async def handle_send(self, send_text, flag):
+        await self.botMessage.delete_msg(self.chatId, self.replyMsgId)
+        await self.botMessage.delete_msg(self.chatId, self.baseMsg.id)
+        if flag:
+            await self.botMessage.st(f"✅️ {send_text}", 'del')
+        else:
+            await self.botMessage.st(f"❌️ {send_text}", 'del')
+
+    @staticmethod
+    def getDeleteButton():
+        return InlineKeyboardMarkup([[InlineKeyboardButton(text="❌️ 关闭", callback_data=f"通用关闭")]])
+
+    @staticmethod
+    def getPaginationButton(page: int, page_size: int, total: int, callback_prefix: str) -> list:
+        """生成分页按钮：首页、上一页、下一页、尾页"""
+        total_pages = math.ceil(total / page_size)
+        buttons = []
+
+        # 首页按钮（第一页禁用）
+        first_button = InlineKeyboardButton(
+            "⏮ 首页",
+            callback_data=f"{callback_prefix}?page=1&page_size={page_size}" if page > 1 else "disabled"
+        )
+        # 上一页按钮（第一页禁用）
+        prev_button = InlineKeyboardButton(
+            "⬅️ 上一页",
+            callback_data=f"{callback_prefix}?page={page - 1}&page_size={page_size}" if page > 1 else "disabled"
+        )
+        # 下一页按钮（最后一页禁用）
+        next_button = InlineKeyboardButton(
+            "下一页 ➡️",
+            callback_data=f"{callback_prefix}?page={page + 1}&page_size={page_size}" if page < total_pages else "disabled"
+        )
+        # 尾页按钮（最后一页禁用）
+        last_button = InlineKeyboardButton(
+            "尾页 ⏭",
+            callback_data=f"{callback_prefix}?page={total_pages}&page_size={page_size}" if page < total_pages else "disabled"
+        )
+
+        # 单行显示所有分页按钮
+        buttons.append([first_button, prev_button, next_button, last_button])
+        return buttons

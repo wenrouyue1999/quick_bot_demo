@@ -128,7 +128,15 @@ class BotMessage:
                                          disable_web_page_preview=True,
                                          entities=entities)
 
-    async def editByMsg_id(self, send_text, msg_id, button_list, param):
+    async def editByMsgId(self, send_text, msg_id, button_list, param):
+        """
+        专用于指定消息id的修改（多用于回复后修改）
+        @param send_text: 文本
+        @param msg_id: 消息id self.buttonReplyMsgId
+        @param button_list: 按钮
+        @param param: 返回的指定场景
+        @return:
+        """
         await self.bot.edit_message_text(chat_id=int(self.chat_id),
                                          message_id=int(msg_id),
                                          text=send_text,

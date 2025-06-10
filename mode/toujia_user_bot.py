@@ -4,7 +4,6 @@
 # @Time    : 2024/11/16 下午1:21
 # @Author  : wenrouyue
 # @File    : toujia_user_bot.py
-from sqlalchemy import update
 from import_utils import *
 
 
@@ -41,60 +40,10 @@ class ToujiaUserBot(BaseModel):
                 f"bot_start_name='{self.bot_start_name}' ,bot_username='{self.bot_username}' , "
                 f"update_time='{self.update_time}', create_time='{self.create_time}')>")
 
-    def getUserBot(self, flag=None):
-        dbm = DatabaseManager()
-        db_user = dbm.session.query(ToujiaUserBot).filter_by(tg_id=self.tg_id, is_delete="0").first()
-        if db_user:
-            log.info(f"用户存在机器人：{self}")
-            return db_user
-        else:
-            if flag is None:
-                log.info(f"用户不存在机器人，非启动，无需新增")
-            else:
-                log.info(f"用户不存在机器人，开始新增：{self}")
-                dbm.add(self)
-            return None
-
-    def queryBotByid(self):
-        dbm = DatabaseManager()
-        return dbm.session.query(ToujiaUserBot).filter_by(tg_id=self.tg_id, bot_username=self.bot_username,
-                                                          is_delete="0").first()
-
     def queryBotByToken(self):
         dbm = DatabaseManager()
         return dbm.session.query(ToujiaUserBot).filter_by(tg_id=self.tg_id, bot_token=self.bot_token,
                                                           is_delete="0").first()
-
-    def update(self):
-        dbm = DatabaseManager()
-        dbm.update(self)
-        return self
-
-    def checkBotIsOnly(self):
-        dbm = DatabaseManager()
-        db_user = dbm.session.query(ToujiaUserBot).filter_by(tg_id=self.tg_id, is_delete="0").first()
-        if db_user:
-            log.info(f"用户存在机器人：{self} 不允许创建多个")
-            return db_user
-        else:
-            log.info(f"用户不存在机器人，{self} 允许创建")
-            return None
-
-    @staticmethod
-    def update_bot_batch(tg_ids: list):
-        dbm = DatabaseManager()
-        # 使用 'in_' 来筛选 tg_id
-        bots_to_update = dbm.session.query(ToujiaUserBot).filter_by(is_delete="0").filter(
-            ToujiaUserBot.tg_id.in_(tg_ids)).all()
-        if not bots_to_update:
-            log.info("No users found with provided tg_ids.")
-            return []
-        bots_token = []
-        for bot in bots_to_update:
-            bots_token.append(bot.bot_token)
-        dbm.session.query(ToujiaUserBot).filter(ToujiaUserBot.tg_id.in_(tg_ids)).update({ToujiaUserBot.bot_flag: "0"})
-        dbm.session.commit()
-        return bots_token
 
     @staticmethod
     def initialize():
@@ -102,17 +51,8 @@ class ToujiaUserBot(BaseModel):
         return dbm.execute_sql(
             """SELECT tm.* FROM toujia_user_bot tm JOIN toujia_user tu ON tm.tg_id = tu.tg_id WHERE tu.vip_level > :vip_level AND tu.vip_validity_time > NOW() and tm.is_delete = :is_delete """,
             {'vip_level': 0, 'is_delete': "0"})
-        # return dbm.execute_sql(
-        #         """SELECT tm.* FROM toujia_user_bot tm JOIN toujia_user tu ON tm.tg_id = tu.tg_id WHERE tu.vip_level > :vip_level AND tu.vip_validity_time > NOW() and tm.is_delete = :is_delete """,
-        #         {'vip_level': 0, 'is_delete': "0"}
-        # )
 
     @staticmethod
-    def initialize_father():
+    def initializeFather():
         dbm = DatabaseManager()
         return dbm.session.query(ToujiaUserBot).filter_by(tg_id="father", is_delete="0").all()
-
-    @staticmethod
-    def get_edit_bot():
-        dbm = DatabaseManager()
-        return dbm.session.query(ToujiaUserBot).filter_by(tg_id="father", bot_username="edit", is_delete="0").first()

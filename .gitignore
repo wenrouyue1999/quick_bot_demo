@@ -35,9 +35,9 @@ build/
 
 ### VS Code ###
 .vscode/
-test.js
+test.*
 nodemon.json
 *.session
 *.session.*
-config_prod.yaml
-
+*.session-journal
+-100*.json

@@ -57,29 +57,11 @@ class ToujiaUserTransferGroup(BaseModel):
                                                                     group_id=group_id,
                                                                     is_delete=self.is_delete).first()
 
-    def getLimit(self, size):
-        dbm = DatabaseManager()
-        return (
-            dbm.session.query(ToujiaUserTransferGroup)
-            .filter_by(tg_id=self.tg_id, bot_id=self.bot_id, is_delete=self.is_delete)
-            .order_by(ToujiaUserTransferGroup.update_time.desc())
-            .limit(size)
-            .all()
-        )
-
     def getCanSendChat(self):
         dbm = DatabaseManager()
         return (
             dbm.session.query(ToujiaUserTransferGroup)
             .filter_by(tg_id=self.tg_id, bot_id=self.bot_id, is_delete=self.is_delete, owner="1")
             .order_by(ToujiaUserTransferGroup.update_time.desc())
-            .all()
-        )
-
-    def initialize(self):
-        dbm = DatabaseManager()
-        return (
-            dbm.session.query(ToujiaUserTransferGroup)
-            .filter_by(bot_id=self.bot_id, is_delete=self.is_delete, owner="1")
             .all()
         )

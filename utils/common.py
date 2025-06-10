@@ -143,6 +143,21 @@ def get_today():
     day = str(now.day).zfill(2)
     return f'{year}{month}{day}'
 
+def parse_input(text: str) -> dict:
+    """
+    解析用户输入
+    Args:
+        text:
+
+    Returns:
+
+    """
+    task_info = {}
+    for line in text.strip().splitlines():
+        if "：" in line:  # 使用中文全角冒号分割
+            key, _, value = line.partition("：")
+            task_info[key.strip()] = value.strip()
+    return task_info
 
 if __name__ == '__main__':
     print(checkTgLink("https://t.me/c/1886369298/9369"))
