@@ -17,15 +17,15 @@ class BasePage:
         self.botMessage: Optional[BotMessage] = None
         self.botMessageByUser: Optional[BotMessage] = None
         if bot_data:
-            self.bot: Optional[Client] = bot_data.get('bot')
-            self.chatId = int(bot_data.get('chat_id'))
-            self.userId = int(bot_data.get('user_id'))
-            self.replyText = bot_data.get('reply_text')
-            self.replyToText = bot_data.get('reply_to_text')
-            self.replyMsgId = bot_data.get('reply_msg_id')
-            self.buttonReplyMsgId = bot_data.get('button_reply_msg_id')
-            self.userName = bot_data.get('user_name')
-            self.name = bot_data.get('name')
+            self.bot: Optional[Client] = bot_data.get('bot', None)
+            self.chatId: int = int(bot_data.get('chat_id', 0))
+            self.userId: int = int(bot_data.get('user_id', 0))
+            self.replyText: Optional[str] = bot_data.get('reply_text', None)
+            self.replyToText: Optional[str] = bot_data.get('reply_to_text', None)
+            self.replyMsgId: int = int(bot_data.get('reply_msg_id', 0))
+            self.buttonReplyMsgId: int = int(bot_data.get('button_reply_msg_id', 0))
+            self.userName: Optional[str] = bot_data.get('user_name', None)
+            self.name: Optional[str] = bot_data.get('name', None)
         if isinstance(callbackQuery, Message):
             self.messageId = int(callbackQuery.id)
         elif isinstance(callbackQuery, CallbackQuery):
@@ -69,22 +69,22 @@ class BasePage:
         # 首页按钮（第一页禁用）
         first_button = InlineKeyboardButton(
             "⏮ 首页",
-            callback_data=f"{callback_prefix}?page=1&page_size={page_size}" if page > 1 else "disabled"
+            callback_data=f"{callback_prefix}?page=1&page_size={page_size}" if page > 1 else "分页异常?t=first_button"
         )
         # 上一页按钮（第一页禁用）
         prev_button = InlineKeyboardButton(
             "⬅️ 上一页",
-            callback_data=f"{callback_prefix}?page={page - 1}&page_size={page_size}" if page > 1 else "disabled"
+            callback_data=f"{callback_prefix}?page={page - 1}&page_size={page_size}" if page > 1 else "分页异常?t=prev_button"
         )
         # 下一页按钮（最后一页禁用）
         next_button = InlineKeyboardButton(
             "下一页 ➡️",
-            callback_data=f"{callback_prefix}?page={page + 1}&page_size={page_size}" if page < total_pages else "disabled"
+            callback_data=f"{callback_prefix}?page={page + 1}&page_size={page_size}" if page < total_pages else "分页异常?t=next_button"
         )
         # 尾页按钮（最后一页禁用）
         last_button = InlineKeyboardButton(
             "尾页 ⏭",
-            callback_data=f"{callback_prefix}?page={total_pages}&page_size={page_size}" if page < total_pages else "disabled"
+            callback_data=f"{callback_prefix}?page={total_pages}&page_size={page_size}" if page < total_pages else "分页异常?t=last_button"
         )
 
         # 单行显示所有分页按钮

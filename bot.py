@@ -145,6 +145,8 @@ class FatherBot:
                 await self.ReplyInput.replyInput(bot, msg)
             if msg.photo is not None:
                 await self.ReplyInput.replyInput(bot, msg)
+            if msg.media is not None:
+                await self.ReplyInput.replyInput(bot, msg)
 
     async def message_private(self, bot: Client, msg: Message):
         log.info("message_private 接收消息了")

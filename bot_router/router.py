@@ -81,7 +81,7 @@ class ReplyInput:
         chat_id = msg.chat.id
         user_id = msg.from_user.id
         button_reply_msg_id = str(url[-1]).split("：")[-1]
-        log.info(f'用户：{user_id} 回复消息：{url[0]}\n 消息id&回复id：{reply_msg_id} {button_reply_msg_id} 回复内容：{reply_text}')
+        log.info(f'用户：{user_id} 回复消息：{url[0]}\n 消息id&回复id：{reply_msg_id} {button_reply_msg_id} 回复内容：{reply_text or "非文本"}')
         # 父机器人于子机器人权限判断
         if 'child' in bot.name:
             url[0] = "c|" + url[0]

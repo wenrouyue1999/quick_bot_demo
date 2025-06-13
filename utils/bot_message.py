@@ -60,22 +60,39 @@ class BotMessage:
             log.info(e)
             log.info(f"BotMessage.st 发送消息失败！text：{send_text}\ndel：{del_flag}\nargs：{args}")
 
-    async def send(self, send_text, button_list, del_flag=None, *args):
+    async def send(self, send_text, button_list):
         try:
             send = self.chat_id
-            if args:
-                send = args[0]
-            if del_flag != "del":
-                await self.bot.send_message(send, send_text, reply_markup=button_list, parse_mode=ParseMode.HTML,
-                                            disable_web_page_preview=True)
-            else:
-                sent_message = await self.bot.send_message(send, send_text, reply_markup=button_list,
-                                                           parse_mode=ParseMode.HTML,
-                                                           disable_web_page_preview=True)
-                await self.delete_timeout(send, sent_message.id)
+            await self.bot.send_message(send, send_text, reply_markup=button_list, parse_mode=ParseMode.HTML,
+                                        disable_web_page_preview=True)
         except Exception as e:
             log.info(e)
-            log.info(f"BotMessage.send 发送消息失败！send_text：{send_text}\nbuttonList：{button_list}\ndel：{del_flag}")
+            log.info(f"BotMessage.send 发送消息失败！send_text：{send_text}\nbuttonList：{button_list}")
+
+    async def send_message(self, send_text, button_list, **kwargs):
+        """
+        发送消息，text 为必传字段，其他参数透传给 pyrogram.send_message
+        Args:
+            send_text (str): 消息文本
+            **kwargs: 其他参数，如 reply_markup, parse_mode, entities 等
+        Returns:
+            types.Message: 发送的消息对象
+            @param send_text: 发送文本
+            @param button_list: 按钮
+        """
+        try:
+            sent_message = await self.bot.send_message(
+                chat_id=self.chat_id,
+                text=send_text,
+                parse_mode=ParseMode.HTML,  # 默认 HTML 解析
+                disable_web_page_preview=True,  # 默认禁用网页预览
+                reply_markup=button_list,
+                **kwargs  # 透传其他参数
+            )
+            return sent_message
+        except Exception as e:
+            log.info(f"BotMessage.send_message 发送消息失败！send_text: {send_text},buttonList：{button_list} kwargs: {kwargs}, error: {e}")
+            raise
 
     async def delete_timeout(self, chat_id, message_id):
         await asyncio.sleep(5)

@@ -68,3 +68,18 @@ class FatherPage(BasePage):
         if url:
             log.info(f"closeMessage 有参数。。。 进行处理：{url}")
         await self.botMessage.delete_msg(self.chatId, self.messageId)
+
+    async def pageError(self, url):
+        if url:
+            log.info(f"pageError 有参数。。。 进行处理：{url}")
+            t = url.get('t', 'error')
+            send_text = "分页异常"
+            if t == "first_button":
+                send_text = "当前为首页"
+            if t == "prev_button":
+                send_text = "没有上一页"
+            if t == "next_button":
+                send_text = "没有下一页"
+            if t == "last_button":
+                send_text = "当前为尾页"
+            await self.baseMsg.answer(send_text,True)
