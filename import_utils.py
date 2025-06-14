@@ -22,6 +22,7 @@ from sqlalchemy import Column, String, DateTime, func, text, update, Integer, Ti
 from mode.base_mode import BaseModel
 from utils.mysql_utils import DatabaseManager
 from config.redis_keys import RedisKeys
+from urllib.parse import urlencode
 
 log = LoggerConfig(__name__).get_logger()
 config = load_config()

@@ -25,6 +25,43 @@ class FatherPage(BasePage):
             await self.bot.delete_messages(self.chatId, self.messageId)
             await self.botStart("returnLast")
 
+    async def confirmTrue(self, url):
+        """
+        通用模式确认 m 代表大模式 t 代表小类型
+        @param url: {”m“:"adList","t":"del"}
+        @return:
+        """
+        if url:
+            log.info(f"FatherPage confirmTrue 有参数。。。 进行处理：{url}")
+        m = url.get("m")
+        t = url.get("t")
+        if m == 'adList':
+            if t == 'del':
+                ad_id = url.get("ad_id")
+                # await AdvertisementPage(self.bot_data, self.baseMsg).callDeleteAdvertisementById(url={"ad_id": ad_id})
+                return
+
+    async def confirmFalse(self, url):
+        """
+        通用模式取消 m 代表大模式 t 代表小类型
+        @param url: {”m“:"adList","t":"del"}
+        @return:
+        """
+        if url:
+            log.info(f"FatherPage confirmFalse 有参数。。。 进行处理：{url}")
+        m = url.get("m")
+        t = url.get("t")
+        if m == 'adList':
+            if t == 'del':
+                ad_id = url.get("ad_id")
+                # await AdvertisementPage(self.bot_data, self.baseMsg).callAddAdvertisementPage(
+                #     url={"t": "add", "ad_id": ad_id})
+                return
+
+
+
+
+
     async def botStart(self, url):
         if url and url != "returnLast":
             log.info(f"start 有参数。。。 进行处理：{url}")

@@ -118,6 +118,26 @@ class BotMessage:
         except Exception as e:
             log.info(e)
 
+    async def returnLastByConfirm(self, send_text, param):
+        """
+        返回上一级的二级确认
+        @param send_text: 二级确认提示语
+        @param param: {"mode":"del_ad","id":"E53DBACA8F"}
+        @return:
+        """
+        url_str = urlencode(param)
+        button_list = InlineKeyboardMarkup([
+            [InlineKeyboardButton(text="确认", callback_data=f"通用确认?{url_str}")],
+            [InlineKeyboardButton(text="取消", callback_data=f"通用取消?{url_str}")],
+        ])
+
+        await self.bot.edit_message_text(chat_id=self.chat_id,
+                                         message_id=self.msg_id,
+                                         text=send_text,
+                                         parse_mode=ParseMode.HTML,
+                                         reply_markup=button_list,
+                                         disable_web_page_preview=True)
+
     async def returnLastByCallBackQuery(self, send_text, button_list: Optional[Union[InlineKeyboardMarkup, None]],
                                         param):
         await self.bot.edit_message_text(chat_id=self.chat_id,
