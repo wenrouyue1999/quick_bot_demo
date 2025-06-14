@@ -20,7 +20,6 @@ class ToujiaUserBot(BaseModel):
     bot_start_name = Column(String(200), nullable=True, comment='机器人启动时的名字')
     bot_username = Column(String(200), nullable=True, comment='机器人用户名')
     bot_flag = Column(String(100), nullable=True, comment='机器人启动状态 0未启动 1启动')
-    is_delete = Column(String(10), default='0', comment='0未删除 1已删除')
 
     def __init__(self, tg_id, name, user_name, bot_token=None, bot_name=None, bot_start_name=None, bot_username=None,
                  bot_flag=None, **kw: Any):

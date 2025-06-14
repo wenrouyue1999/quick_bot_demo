@@ -23,6 +23,7 @@ from mode.base_mode import BaseModel
 from utils.mysql_utils import DatabaseManager
 from config.redis_keys import RedisKeys
 from urllib.parse import urlencode
+from sqlalchemy.orm import declarative_base
 
 log = LoggerConfig(__name__).get_logger()
 config = load_config()

@@ -18,17 +18,15 @@ class ToujiaUser(BaseModel):
     vip_validity_time = Column(DateTime, nullable=True, comment='vip过期时间')
     down_count = Column(Integer, default=0, comment='大文件下载次数')
     is_block = Column(String(10), default='0', comment='0未拉黑 1已拉黑')
-    is_delete = Column(String(10), default='0', comment='0未删除 1已删除')
     is_copy = Column(String(10), default='0', comment='0不能 1可以')
 
-    def __init__(self, tg_id, name, user_name, vip_level='0', is_block='0', is_delete='0', is_copy='0', **kw: Any):
+    def __init__(self, tg_id, name, user_name, vip_level='0', is_block='0', is_copy='0', **kw: Any):
         super().__init__(**kw)
         self.tg_id = tg_id
         self.name = name
         self.user_name = user_name
         self.vip_level = vip_level
         self.is_block = is_block
-        self.is_delete = is_delete
         self.is_copy = is_copy
 
     def __repr__(self):

@@ -22,11 +22,10 @@ class ToujiaUserTransferGroup(BaseModel):
     group_username = Column(String(100), nullable=True, comment='群组/频道 用户名')
     owner = Column(String(100), nullable=True, comment='0无权限发送 1有权限发送')
     owner_dict = Column(String(100), nullable=True, comment='所有权限字典')
-    is_delete = Column(String(100), nullable=True, comment='0未删除 1已删除')
 
     def __init__(self, tg_id, bot_id, group_id=None, group_type=None,
                  group_link=None, group_name=None, group_username=None,
-                 owner=None, owner_dict=None, is_delete='0', **kw: Any):
+                 owner=None, owner_dict=None, **kw: Any):
         super().__init__(**kw)
         self.tg_id = tg_id
         self.bot_id = bot_id
@@ -37,7 +36,6 @@ class ToujiaUserTransferGroup(BaseModel):
         self.group_username = group_username
         self.owner = owner
         self.owner_dict = owner_dict
-        self.is_delete = is_delete
 
     def __repr__(self):
         return (f"<ToujiaUserTransferGroup(id='{self.id}', tg_id='{self.tg_id}', bot_id='{self.bot_id}', "
