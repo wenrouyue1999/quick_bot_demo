@@ -90,3 +90,16 @@ class BasePage:
         # 单行显示所有分页按钮
         buttons.append([first_button, prev_button, next_button, last_button])
         return buttons
+
+    async def getChatByHttps(self, link: str) -> int:
+        """
+        根据频道链接解析其 chat_id，支持私密和公开链接
+        :param link: Telegram 链接（如 https://t.me/c/123456789 或 https://t.me/channel_username）
+        :return: chat_id 字符串（私密格式为 -100xxxx）
+        """
+        if common.is_private_link(link):
+            return int(f"-100{link.split('/')[-1]}")
+        else:
+            username = link.split("/")[-1]
+            chat = await self.bot.get_chat(f"@{username}")
+            return int(chat.id)
