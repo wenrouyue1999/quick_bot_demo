@@ -95,21 +95,23 @@ class FatherBot:
             return None
 
     def add_handler(self, bot: Client):
-        bot.add_handler(MessageHandler(self.commod, filters.command(
-            ["start", "help"]
-        ) & filters.private))
-        # app.add_handler()
-        # app.add_handler(InlineQueryHandler(callback=self.Input))
+        # 监听私聊中 /start 和 /help 指令；
+        bot.add_handler(MessageHandler(self.commod, filters.command(["start", "help"]) & filters.private))
+        # 处理所有按钮点击事件（即 callback_data）
         bot.add_handler(CallbackQueryHandler(callback=self.callback_query))
-        # app.add_handler(ChatMemberUpdatedHandler(main_chat_member_update, ChatMemberUpdatedHandler.MY_CHAT_MEMBER))
+        # 用户回复机器人消息
         bot.add_handler(MessageHandler(filters=filters.private & filters.reply, callback=self.reply_message_private))
+        # 私聊中发送普通消息（非指令、非回复）
         bot.add_handler(MessageHandler(filters=filters.private, callback=self.message_private))
+        # 处理机器人加入/退出群组/频道的通知
         bot.add_handler(ChatMemberUpdatedHandler(callback=self.chat_member_update))
+        # 监听 bot 所在频道的所有新消息
+        bot.add_handler(MessageHandler(filters=filters.channel | filters.group, callback=self.channel_message))
 
     @staticmethod
     def chat_member_update(bot: Client, updated: chat_member_updated):
         # 检查更新的成员是否是你的机器人
-        log.info(updated)
+        # log.info(updated)
         new_chat_member = updated.new_chat_member
         chat = updated.chat
         chat_service = ChatMemberUpdatedService(bot, updated)
@@ -135,6 +137,18 @@ class FatherBot:
             # 处理机器人被移除的情况
             chat_service.removeMember()
             log.info(f"机器人已被移除群组: {chat.title} (ID: {chat.id})")
+
+        # 提取关键信息
+        chat_type = "频道" if updated.chat.type.value == "channel" else "群组"
+        chat_title = updated.chat.title
+        chat_username = f"@{updated.chat.username}" if updated.chat.username else ""
+        user_name = f"{updated.from_user.first_name} {updated.from_user.last_name or ''} {'@' + updated.from_user.username or ''}".strip()
+        user_id = updated.from_user.id
+        date = updated.date
+        # 判断加入或退出
+        action = "加入" if updated.new_chat_member and updated.new_chat_member.status.value == "member" else "退出"
+        # 打印日志
+        log.info(f"{date} 用户 {user_name} (ID: {user_id}) {action} {chat_type} {chat_title} {chat_username}")
 
     async def reply_message_private(self, bot: Client, msg: Message):
         flag = await self.checkUser(msg.from_user.id)
@@ -210,6 +224,9 @@ class FatherBot:
         else:
             formatted_msg = f"{command}"
         await self.router.route(formatted_msg, bot, msg, "msg")
+
+    async def channel_message(self, bot: Client, message: Message):
+        log.info(f"频道消息：{message.chat.id} - {message.id} - {message.text or '非文本'}")
 
     async def checkUser(self, userId, **args):
         is_ban = self.user_is_ban(userId)
