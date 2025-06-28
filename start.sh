@@ -1,5 +1,20 @@
 #!/bin/bash
 
+VENV_DIR_BUG=".venv"
+PYTHON_VERSION=$(python3 --version | grep -oP '\d+\.\d+')
+SITE_PACKAGES="$VENV_DIR_BUG/lib/python$PYTHON_VERSION/site-packages/pyrogram/utils.py"
+MODIFIED_FILE="./pyrogram_bug/utils.py"
+
+# 检查文件和目录
+[ ! -d "$VENV_DIR_BUG" ] && { echo "Error: .venv not found"; exit 1; }
+[ ! -f "$MODIFIED_FILE" ] && { echo "Error: $MODIFIED_FILE not found"; exit 1; }
+[ ! -f "$SITE_PACKAGES" ] && { echo "Error: $SITE_PACKAGES not found"; exit 1; }
+
+# 备份并替换
+cp "$SITE_PACKAGES" "$SITE_PACKAGES.bak" && echo "Backed up utils.py"
+cp "$MODIFIED_FILE" "$SITE_PACKAGES" && echo "Replaced utils.py"
+
+
 # 项目目录
 PROJECT_DIR="/www/wwwroot/GroupSendBot"
 # 虚拟环境路径

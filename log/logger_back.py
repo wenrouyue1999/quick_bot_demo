@@ -1,11 +1,11 @@
 #!/usr/bin/env python
+# !/usr/bin/python3
 # -*- coding: utf-8 -*-
 # @Time    : 2024/8/23 下午5:58
 # @Author  : wenrouyue
 # @File    : logger.py
 
 import logging
-import os
 from logging.handlers import TimedRotatingFileHandler
 from datetime import datetime
 
@@ -14,20 +14,13 @@ logging.getLogger('sqlalchemy.engine').disabled = True
 
 class CustomTimedRotatingFileHandler(TimedRotatingFileHandler):
     def __init__(self, filename, when='D', interval=1, backupCount=30, encoding='utf-8', delay=False):
-        # 确保日志文件夹存在
-        log_dir = os.path.dirname(filename)
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        # 只使用基础文件名，不包含日期
         super().__init__(filename, when, interval, backupCount, encoding, delay)
+        self.baseFilename = filename
 
     def doRollover(self):
-        timestamp = datetime.now().strftime('%Y-%m-%d')
-        new_filename = f"logs/info_{timestamp}.log"
         self.stream.close()
-        # 检查目标文件是否存在，若存在则删除
-        if os.path.exists(new_filename):
-            os.remove(new_filename)
+        timestamp = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+        new_filename = f"logs/info-{timestamp}.log"
         self.rotate(self.baseFilename, new_filename)
         self.stream = self._open()
 
@@ -36,16 +29,12 @@ class LoggerConfig:
     def __init__(self, name, level=logging.INFO):
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
-        # 使用固定基础文件名
-        self.log_file = "logs/info.log"  # 不包含日期
+        # 获取当前日期并格式化
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        self.log_file = f"logs/info_{current_date}.log"
 
-        file_handler = CustomTimedRotatingFileHandler(
-            self.log_file, when='midnight', interval=1, backupCount=30, encoding='utf-8'
-        )
-        # 测试效果
-        # file_handler = CustomTimedRotatingFileHandler(
-        #     self.log_file, when='S', interval=10, backupCount=30, encoding='utf-8'
-        # )
+        file_handler = CustomTimedRotatingFileHandler(self.log_file, when='D', interval=1, backupCount=30,
+                                                      encoding='utf-8')
         file_handler.setLevel(logging.INFO)
 
         # 创建控制台处理器
