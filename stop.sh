@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 项目目录
-PROJECT_DIR="/www/wwwroot/GroupSendBot"
+PROJECT_DIR="$(pwd)"
 # 主程序文件
 MAIN_FILE="$PROJECT_DIR/main.py"
 

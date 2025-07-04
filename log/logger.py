@@ -4,62 +4,71 @@
 # @Author  : wenrouyue
 # @File    : logger.py
 
-import logging
+
 import os
-from logging.handlers import TimedRotatingFileHandler
-from datetime import datetime
+import sys
 
-logging.getLogger('sqlalchemy.engine').disabled = True
-
-
-class CustomTimedRotatingFileHandler(TimedRotatingFileHandler):
-    def __init__(self, filename, when='D', interval=1, backupCount=30, encoding='utf-8', delay=False):
-        # 确保日志文件夹存在
-        log_dir = os.path.dirname(filename)
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        # 只使用基础文件名，不包含日期
-        super().__init__(filename, when, interval, backupCount, encoding, delay)
-
-    def doRollover(self):
-        timestamp = datetime.now().strftime('%Y-%m-%d')
-        new_filename = f"logs/info_{timestamp}.log"
-        self.stream.close()
-        # 检查目标文件是否存在，若存在则删除
-        if os.path.exists(new_filename):
-            os.remove(new_filename)
-        self.rotate(self.baseFilename, new_filename)
-        self.stream = self._open()
+import logbook
+from logbook import Logger, TimedRotatingFileHandler
 
 
-class LoggerConfig:
-    def __init__(self, name, level=logging.INFO):
-        self.logger = logging.getLogger(name)
-        self.logger.setLevel(level)
-        # 使用固定基础文件名
-        self.log_file = "logs/info.log"  # 不包含日期
+# 禁用 SQLAlchemy 日志（针对 logbook）
+def suppress_sqlalchemy_logs():
+    sqlalchemy_logger = logbook.Logger('sqlalchemy.engine')
+    sqlalchemy_logger.level = logbook.ERROR
 
-        file_handler = CustomTimedRotatingFileHandler(
-            self.log_file, when='midnight', interval=1, backupCount=30, encoding='utf-8'
-        )
-        # 测试效果
-        # file_handler = CustomTimedRotatingFileHandler(
-        #     self.log_file, when='S', interval=10, backupCount=30, encoding='utf-8'
-        # )
-        file_handler.setLevel(logging.INFO)
 
-        # 创建控制台处理器
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(level)
+# 日志格式
+def format_log(record, handler):
+    return '{date} {filename}/{func}-{level}-[{lineno}]行：{msg}'.format(
+        date=record.time.strftime('%Y-%m-%d %H:%M:%S'),
+        level=record.level_name,
+        filename=os.path.basename(record.filename),
+        lineno=record.lineno,
+        func=record.func_name,
+        msg=record.message
+    )
 
-        # 创建日志格式
-        formatter = logging.Formatter('%(asctime)s %(filename)s/%(funcName)s-%(levelname)s-[%(lineno)d]行：%(message)s')
-        file_handler.setFormatter(formatter)
-        console_handler.setFormatter(formatter)
 
-        # 添加处理器到日志器
-        self.logger.addHandler(file_handler)
-        self.logger.addHandler(console_handler)
+# 日志目录
+LOG_DIR = os.path.join(os.getcwd(), "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
 
-    def get_logger(self):
-        return self.logger
+# 文件日志处理器
+# log_file_handler = TimedRotatingFileHandler(
+#     filename=os.path.join(LOG_DIR, 'info.log'),
+#     date_format='%Y-%m-%d',
+#     encoding='utf-8',
+#     bubble=True,
+#     level='INFO',
+#     backup_count=0  # 不保留多余旧日志
+# )
+
+# 文件日志处理器（每分钟滚动）
+log_file_handler = TimedRotatingFileHandler(
+    filename=os.path.join(LOG_DIR, 'info.log'),
+    date_format='%Y-%m-%d',  # 包含分钟的格式
+    encoding='utf-8',
+    bubble=True,
+    level='INFO',
+    backup_count=0,  # 不保留多余旧日志
+    rollover_format='{basename}-{timestamp}{ext}',
+    timed_filename_for_current=False  # 当前日志文件不带时间戳
+)
+
+log_file_handler.formatter = format_log
+
+# 控制台日志处理器
+stream_handler = logbook.StreamHandler(stream=sys.stdout, level='INFO', bubble=True)
+stream_handler.formatter = format_log
+
+
+# 初始化 logger
+def init_logger(name: str = "script_log") -> Logger:
+    logbook.set_datetime_format("local")
+    suppress_sqlalchemy_logs()  # 禁用 SQLAlchemy 日志
+    logger = Logger(name)
+    logger.handlers = []
+    logger.handlers.append(log_file_handler)
+    logger.handlers.append(stream_handler)
+    return logger

@@ -16,7 +16,7 @@ cp "$MODIFIED_FILE" "$SITE_PACKAGES" && echo "Replaced utils.py"
 
 
 # 项目目录
-PROJECT_DIR="/www/wwwroot/GroupSendBot"
+PROJECT_DIR="$(pwd)"
 # 虚拟环境路径
 VENV_DIR="$PROJECT_DIR/.venv"
 # 主程序文件

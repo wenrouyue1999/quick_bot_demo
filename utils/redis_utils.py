@@ -8,9 +8,6 @@ import redis
 from import_utils import *
 
 config = load_config()
-from log.logger import LoggerConfig
-
-log = LoggerConfig(__name__).get_logger()
 
 
 # noinspection PyDeprecation
@@ -32,8 +29,25 @@ class RedisUtil:
             return value.decode('utf-8')
         return value
 
-    def hset(self, redis_key, key, value):
-        return self.redis.hset(redis_key, key, value)
+    # def hset(self, redis_key, key, value):
+    #     return self.redis.hset(redis_key, key, value)
+
+    def hset(self, redis_key, key=None, value=None, mapping=None):
+        """
+        设置 Redis hash 值，支持单个 key-value 或 mapping
+        Args:
+            redis_key: Redis hash 键
+            key: 单个字段名（可选）
+            value: 单个字段值（可选）
+            mapping: 字段-值字典（可选）
+        Returns:
+            Redis 操作结果
+        """
+        if mapping is not None:
+            return self.redis.hset(redis_key, mapping=mapping)
+        if key is not None and value is not None:
+            return self.redis.hset(redis_key, key, value)
+        raise ValueError("必须提供 key 和 value 或 mapping 参数")
 
     def hmset(self, redis_key, values):
         return self.redis.hmset(redis_key, values)
@@ -79,6 +93,9 @@ class RedisUtil:
 
     def llen(self, redis_key):
         return self._decode(self.redis.llen(redis_key))
+
+    def scan_iter(self, match=None):
+        return self.redis.scan_iter(match=match)
 
     def sadd(self, redis_key, value):
         return self.redis.sadd(redis_key, value)
