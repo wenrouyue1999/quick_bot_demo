@@ -7,7 +7,7 @@
 import copy
 
 from pyrogram.types.user_and_chats import chat_member_updated
-from mode.group_permission import GroupPermission
+# from mode.group_permission import GroupPermission
 from import_utils import *
 
 config_load = load_config()
@@ -18,8 +18,10 @@ class ChatMemberUpdatedService:
     def __init__(self, bot: Client, updated: chat_member_updated):
         self.bot = bot
         self.updated = updated
-        self.db_group = GroupPermission(updated.from_user.id, bot.me.id).getByGroupId(updated.chat.id)
-        self.group: Optional[GroupPermission] = None
+        # self.db_group = GroupPermission(updated.from_user.id, bot.me.id).getByGroupId(updated.chat.id)
+        # self.group: Optional[GroupPermission] = None
+        self.db_group = None
+        self.group = None
         self.group_link = None
         self.group_username = None
         self.add_or_update = None
@@ -56,10 +58,10 @@ class ChatMemberUpdatedService:
         else:
             log.info("不存在数据库中，先不新增。等待权限变更去新增！")
             self.add_or_update = "add"
-            self.group = GroupPermission(tg_id=self.updated.from_user.id, bot_id=self.bot.me.id,
-                                         group_id=self.updated.chat.id, group_type=self.updated.chat.type,
-                                         group_link=self.group_link, group_name=self.updated.chat.title,
-                                         group_username=self.group_username)
+            # self.group = GroupPermission(tg_id=self.updated.from_user.id, bot_id=self.bot.me.id,
+            #                              group_id=self.updated.chat.id, group_type=self.updated.chat.type,
+            #                              group_link=self.group_link, group_name=self.updated.chat.title,
+            #                              group_username=self.group_username)
 
     def removeMember(self):
         log.info("开始处理移除的逻辑")

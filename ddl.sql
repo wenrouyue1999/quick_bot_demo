@@ -4,12 +4,7 @@ CREATE TABLE `toujia_user` (
   `tg_id` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT 'tg名字',
   `user_name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT 'tg用户名',
-  `vip_level` varchar(100) CHARACTER SET utf8mb4 DEFAULT '0' COMMENT 'vip级别 1转发会员 2下载会员',
-  `vip_validity_time` datetime DEFAULT NULL COMMENT 'vip过期时间',
-  `down_count` int(11) DEFAULT '0' COMMENT '大文件下载次数',
-  `is_block` varchar(10) CHARACTER SET utf8mb4 DEFAULT '0' COMMENT '0未拉黑 1已拉黑',
   `is_delete` varchar(10) CHARACTER SET utf8mb4 DEFAULT '0' COMMENT '0未删除 1已删除',
-  `is_copy` varchar(10) CHARACTER SET utf8mb4 DEFAULT '0' COMMENT '能否复制机器人 0不能 1可以',
   `update_time` datetime DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`tg_id`)
@@ -18,7 +13,7 @@ CREATE TABLE `toujia_user` (
 
 -- toujia.toujia_user_transfer_group definition
 
-CREATE TABLE `toujia_user_transfer_group` (
+CREATE TABLE `user_transfer_group` (
   `id` varchar(100) COLLATE utf8mb4_bin NOT NULL,
   `tg_id` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Telegram ID',
   `bot_id` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Bot ID',
@@ -37,7 +32,7 @@ CREATE TABLE `toujia_user_transfer_group` (
 
 -- toujia.toujia_user_bot definition
 
-CREATE TABLE `toujia_user_bot` (
+CREATE TABLE `user_bot` (
   `id` varchar(100) CHARACTER SET utf8 NOT NULL,
   `tg_id` varchar(100) CHARACTER SET utf8 NOT NULL,
   `name` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT '用户名字',

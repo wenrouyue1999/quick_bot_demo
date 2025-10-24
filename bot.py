@@ -12,7 +12,7 @@ from pyrogram.types.user_and_chats import chat_member_updated
 from pyrogram import filters
 from pyrogram.handlers import MessageHandler, CallbackQueryHandler, ChatMemberUpdatedHandler
 
-from mode.toujia_user_bot import ToujiaUserBot
+from mode.user_bot import UserBot
 from service.chat_member_updated_service import ChatMemberUpdatedService
 from import_utils import *
 
@@ -40,6 +40,10 @@ RATE_LIMIT_WINDOW = config["cache"]["RATE_LIMIT_WINDOW"]
 cache = {}
 bots = {}
 childs = {}
+
+
+async def channel_message(bot: Client, message: Message):
+    log.info(f"频道消息：{message.chat.id} - {message.id} - {message.text or '非文本'}")
 
 
 class FatherBot:
@@ -106,7 +110,7 @@ class FatherBot:
         # 处理机器人加入/退出群组/频道的通知
         bot.add_handler(ChatMemberUpdatedHandler(callback=self.chat_member_update))
         # 监听 bot 所在频道的所有新消息
-        bot.add_handler(MessageHandler(filters=filters.channel | filters.group, callback=self.channel_message))
+        bot.add_handler(MessageHandler(filters=filters.channel | filters.group, callback=channel_message))
 
     @staticmethod
     def chat_member_update(bot: Client, updated: chat_member_updated):
@@ -114,28 +118,28 @@ class FatherBot:
         # log.info(updated)
         new_chat_member = updated.new_chat_member
         chat = updated.chat
-        chat_service = ChatMemberUpdatedService(bot, updated)
+        # chat_service = ChatMemberUpdatedService(bot, updated)
         # 保证 new_chat_member 不为 None
         if new_chat_member is not None and new_chat_member.user.is_bot:
             new_status = new_chat_member.status
             log.info(new_status)
             if new_status == ChatMemberStatus.ADMINISTRATOR:
-                chat_service.joinMember()
-                chat_service.updateAdmin()
+                # chat_service.joinMember()
+                # chat_service.updateAdmin()
                 log.info(f"机器人具有管理员权限 🎉 : {chat.title} (ID: {chat.id})")
             elif new_status == ChatMemberStatus.MEMBER:
                 log.info(f"机器人已被作为成员加入: {chat.title} (ID: {chat.id})")
-                chat_service.joinMember()
-                chat_service.unUpdateAdmin()
+                # chat_service.joinMember()
+                # chat_service.unUpdateAdmin()
                 log.info("机器人没有管理员权限 🚫")
             # 处理被禁用的情况
             elif new_status == ChatMemberStatus.BANNED:
                 log.info(f"机器人被禁止进入群组: {chat.title} (ID: {chat.id})")
-                chat_service.removeMember()
+                # chat_service.removeMember()
 
         elif new_chat_member is None:
             # 处理机器人被移除的情况
-            chat_service.removeMember()
+            # chat_service.removeMember()
             log.info(f"机器人已被移除群组: {chat.title} (ID: {chat.id})")
 
         # 提取关键信息
@@ -146,7 +150,13 @@ class FatherBot:
         user_id = updated.from_user.id
         date = updated.date
         # 判断加入或退出
-        action = "加入" if updated.new_chat_member and updated.new_chat_member.status.value == "member" else "退出"
+        try:
+            action = "加入" if (updated.new_chat_member and
+                                updated.new_chat_member.status.value == "member"
+                                or updated.new_chat_member.status.value == "administrator") else "退出"
+        except Exception as e:
+            action = "移除"
+            log.info(e)
         # 打印日志
         log.info(f"{date} 用户 {user_name} (ID: {user_id}) {action} {chat_type} {chat_title} {chat_username}")
 
@@ -165,8 +175,8 @@ class FatherBot:
     async def message_private(self, bot: Client, msg: Message):
         log.info("message_private 接收消息了")
         if "child" in bot.name:
-            db_bot = ToujiaUserBot(tg_id=msg.from_user.id, name=self.name, user_name=msg.from_user.username,
-                                   bot_token=self.bot.bot_token).queryBotByToken()
+            db_bot = UserBot(tg_id=msg.from_user.id, name=self.name, user_name=msg.from_user.username,
+                             bot_token=self.bot.bot_token).queryBotByToken()
             if not db_bot:
                 text = "此机器人为会员独享机器人，您无法使用哦！"
                 button_list = InlineKeyboardMarkup([
@@ -224,9 +234,6 @@ class FatherBot:
         else:
             formatted_msg = f"{command}"
         await self.router.route(formatted_msg, bot, msg, "msg")
-
-    async def channel_message(self, bot: Client, message: Message):
-        log.info(f"频道消息：{message.chat.id} - {message.id} - {message.text or '非文本'}")
 
     async def checkUser(self, userId, **args):
         is_ban = self.user_is_ban(userId)

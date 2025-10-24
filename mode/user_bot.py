@@ -3,12 +3,12 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2024/11/16 下午1:21
 # @Author  : wenrouyue
-# @File    : toujia_user_bot.py
+# @File    : user_bot.py
 from import_utils import *
 
 
-class ToujiaUserBot(BaseModel):
-    __tablename__ = 'toujia_user_bot'  # 表名
+class UserBot(BaseModel):
+    __tablename__ = 'user_bot'  # 表名
     __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8mb4'}
 
     id = Column(String(100), primary_key=True, default=lambda: str(uuid.uuid4()).replace("-", "").upper())

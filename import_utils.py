@@ -35,6 +35,6 @@ log = init_logger()
 config = load_config()
 redisUtils = RedisUtil(config["redis"]["host"], config["redis"]["port"], config["redis"]["password"],
                        config["redis"]["db"])
-redisUtilsByTask = RedisUtil(config["redis"]["host"], config["redis"]["port"], config["redis"]["password"],
-                             config["redis"]["taskDb"])
+# redisUtilsByTask = RedisUtil(config["redis"]["host"], config["redis"]["port"], config["redis"]["password"],
+#                              config["redis"]["taskDb"])
 db = DatabaseManager()

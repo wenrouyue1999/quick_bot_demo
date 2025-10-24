@@ -11,8 +11,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime
 from bot import bots, childs
 from import_utils import *
-from mode.toujia_user import ToujiaUser
-from mode.toujia_user_bot import ToujiaUserBot
+from mode.user_bot import UserBot
 from typing import Union, List, Optional
 scheduler = AsyncIOScheduler()
 

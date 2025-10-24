@@ -7,7 +7,7 @@
 
 from bot import FatherBot, ChildBot
 from import_utils import *
-from mode.toujia_user_bot import ToujiaUserBot
+from mode.user_bot import UserBot
 from scheduler.bot_scheduler import schedule_jobs
 
 
@@ -15,11 +15,14 @@ async def main():
     config_load = load_config()
     api_id = config_load["key"]["api_id"]
     api_hash = config_load["key"]["api_hash"]
-    # todo 无需数据库启动方式 构建ToujiaUserBot对象
-    # dbf_bots = [ToujiaUserBot(tg_id='father', name='father', user_name='', bot_token='', bot_name='', bot_flag='1', bot_start_name='' ,bot_username='' , update_time='2024-11-16 08:41:44', create_time='2024-11-16 08:41:44'),
-    #             ToujiaUserBot(tg_id='father', name='father', user_name='',bot_token='', bot_name='', bot_flag='1',bot_start_name='', bot_username='',update_time='2024-11-16 08:37:40', create_time='2024-11-16 08:37:40')]
-    dbf_bots = ToujiaUserBot(tg_id="1", name="1", user_name="1").initializeFather()
-    dbc_bots = ToujiaUserBot(tg_id="1", name="1", user_name="1").initialize()
+    # todo 无需数据库启动方式 构建UserBot对象
+    dbf_bots = [
+        # UserBot(tg_id='father', name='father', user_name='', bot_token='', bot_name='', bot_flag='1', bot_start_name='' ,bot_username='' , update_time='2024-11-16 08:41:44', create_time='2024-11-16 08:41:44'),
+        UserBot(tg_id='father', name='father',
+                user_name='toujiawbot', bot_token='7796416736:AAHcnJTbUThg86aXS17XR7GERDYn3jX5JJA',
+                bot_name='偷家王', bot_flag='1', bot_start_name='toujiawbot ', bot_username='@toujiawbot',
+                update_time='2024-11-16 08:37:40', create_time='2024-11-16 08:37:40')]
+    dbc_bots = []
     tasks = []
     for index, bot in enumerate(dbf_bots):
         log.info(f"父机器人循环：{bot}")
