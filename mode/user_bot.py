@@ -41,17 +41,17 @@ class UserBot(BaseModel):
 
     def queryBotByToken(self):
         dbm = DatabaseManager()
-        return dbm.session.query(ToujiaUserBot).filter_by(tg_id=self.tg_id, bot_token=self.bot_token,
+        return dbm.session.query(UserBot).filter_by(tg_id=self.tg_id, bot_token=self.bot_token,
                                                           is_delete="0").first()
 
     @staticmethod
     def initialize():
         dbm = DatabaseManager()
         return dbm.execute_sql(
-            """SELECT tm.* FROM toujia_user_bot tm JOIN toujia_user tu ON tm.tg_id = tu.tg_id WHERE tu.vip_level > :vip_level AND tu.vip_validity_time > NOW() and tm.is_delete = :is_delete """,
+            """SELECT tm.* FROM user_bot tm JOIN tg_user tu ON tm.tg_id = tu.tg_id WHERE tu.vip_level > :vip_level AND tu.vip_validity_time > NOW() and tm.is_delete = :is_delete """,
             {'vip_level': 0, 'is_delete': "0"})
 
     @staticmethod
     def initializeFather():
         dbm = DatabaseManager()
-        return dbm.session.query(ToujiaUserBot).filter_by(tg_id="father", is_delete="0").all()
+        return dbm.session.query(UserBot).filter_by(tg_id="father", is_delete="0").all()

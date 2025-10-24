@@ -12,6 +12,7 @@ from pyrogram.types.user_and_chats import chat_member_updated
 from pyrogram import filters
 from pyrogram.handlers import MessageHandler, CallbackQueryHandler, ChatMemberUpdatedHandler
 
+from mode.tg_user import TgUser
 from mode.user_bot import UserBot
 from service.chat_member_updated_service import ChatMemberUpdatedService
 from import_utils import *
@@ -233,6 +234,11 @@ class FatherBot:
             formatted_msg = f"{command}?{query_params}"
         else:
             formatted_msg = f"{command}"
+        user_id = msg.from_user.id
+        name = common.getName(msg.chat.first_name, msg.chat.last_name)
+        user_name = "https://t.me/" + msg.chat.username
+        log.info(f"用户user_id：{user_id}，name:{name} ，user_name: https://t.me/{user_name}")
+        TgUser(user_id, name, user_name).init_user()
         await self.router.route(formatted_msg, bot, msg, "msg")
 
     async def checkUser(self, userId, **args):

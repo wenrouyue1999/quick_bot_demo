@@ -21,8 +21,16 @@ class TgUser(BaseModel):
         self.tg_id = tg_id
         self.name = name
         self.user_name = user_name
+        self.dbm = DatabaseManager()
 
     def __repr__(self):
         return (f"<TgUser(tg_id='{self.tg_id}', name='{self.name}', user_name='{self.user_name}'"
                 f", is_delete='{self.is_delete}', "
                 f"update_time='{self.update_time}', create_time='{self.create_time}')>")
+
+    def init_user(self):
+        db_tg_user = self.dbm.session.query(TgUser).filter_by(tg_id=self.tg_id, is_delete="0").first()
+        if db_tg_user:
+            log.info(f"用户存在：{self}")
+        else:
+            self.dbm.add(self)

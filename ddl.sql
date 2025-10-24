@@ -1,6 +1,6 @@
 -- toujia.toujia_user definition
 
-CREATE TABLE `toujia_user` (
+CREATE TABLE `tg_user` (
   `tg_id` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT 'tg名字',
   `user_name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT 'tg用户名',
