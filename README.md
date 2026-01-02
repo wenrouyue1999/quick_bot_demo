@@ -33,6 +33,19 @@
    根据 ToujiaUserBot 中的 initialize() 方法中的 SQL，执行相关语句初始化。
 4. 启动主程序：
    python main.py
+5. uv用法
+  pip install uv
+  uv init
+  pip install pipreqs
+  代码扫描 生成依赖 requirements.txt
+  pipreqs ./ --encoding UTF8 --force --use-local --ignore .venv
+  uv add -r requirements.txt
+  uv sync
+  .\.venv\Scripts\activate
+  source .venv/bin/activate
+  
+  uv pip install -r requirements.txt
+  uv export --format requirements-txt > requirements.txt
 ```
 
 ---

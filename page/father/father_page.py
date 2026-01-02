@@ -32,7 +32,9 @@ class FatherPage(BasePage):
         @return:
         """
         if url:
-            log.info(f"FatherPage confirmTrue 有参数。。。 进行处理：{url}")
+            log.info(f"FatherPage confirmTrue 有参数。。。 进行处理（通用确认：是）：{url}")
+            # 如果有弹窗稍后的，则放到对应方法中调用 await self.baseMsg.answer("✅ 后台注册中，成功后会发送消息通知！", show_alert=True)
+            # await self.botMessage.delete_msg(chat_id=self.chatId, message_id=self.messageId)
         m = url.get("m")
         t = url.get("t")
         if m == 'adList':
@@ -48,7 +50,7 @@ class FatherPage(BasePage):
         @return:
         """
         if url:
-            log.info(f"FatherPage confirmFalse 有参数。。。 进行处理：{url}")
+            log.info(f"FatherPage confirmFalse 有参数。。。 进行处理（通用确认：否）：{url}")
         m = url.get("m")
         t = url.get("t")
         if m == 'adList':
