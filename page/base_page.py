@@ -144,3 +144,18 @@ class BasePage:
             # 组合原始提示和错误信息
             full_text = f"{base_text}\n\n{error_text}"
             await self.botMessage.send_reply(full_text)
+
+    @staticmethod
+    def check_safe_input(send_text):
+        """
+        验证输入是否安全（只允许大小写字母、数字及部分安全特殊字符）
+        且必须包含至少一种字符（可根据需求调整复杂度，目前仅做白名单校验防止注入）
+        允许的特殊字符：!@#$%^&*()_+-=[]{};':",.<>/?
+        禁止的特殊字符：` (反引号), | (管道符), \ (反斜杠) 回车
+        """
+        # 白名单正则：字母、数字、及安全符号
+        # 注意转义：\- \]
+        pattern = r"^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':\",.<>/?]*$"
+        if not re.match(pattern, send_text):
+            return False
+        return True
