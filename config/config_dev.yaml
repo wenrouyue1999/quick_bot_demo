@@ -25,3 +25,5 @@ redisKey:
   adminId: "6465491588"
   adminList: "adminList"
   userBlank: "userBlank"
+request:
+  base_url: http://127.0.0.1:10000
