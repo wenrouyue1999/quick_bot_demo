@@ -79,10 +79,7 @@ class FatherPage(BasePage):
         这里的url 则是按钮的设置的callback_data 必须设置?key=1 否则url解析不出来参数
         """
         key = next(iter(url.keys()))
-        reply_messages = {
-            "fbot_reply": "回复机器人TOKEN\n请点击此条消息进行回复！",
-            "fbot_reply111": "回复机器人TOKEN111\n请点击此条消息进行回复！",
-        }
+        reply_messages = self.get_reply_messages()
         if key in reply_messages:
             await self.botMessage.send_reply(reply_messages[key])
 
@@ -92,6 +89,7 @@ class FatherPage(BasePage):
         """
         log.info(self.baseMsg.text)
         await self.botMessage.st(f"{self.bot_type + ':' + self.baseMsg.text}", 'del')
+        self.delNotifySend
 
     async def botNext(self, url):
         """

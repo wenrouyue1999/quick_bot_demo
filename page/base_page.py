@@ -48,13 +48,31 @@ class BasePage:
                                          self.baseMsg)
             return self.botMessage
 
-    async def handle_send(self, send_text, flag):
+    async def delReplyAndSendNotice(self, send_text, flag, button_list=None):
+        """
+        直接删除机器人的请求回复，和用户的回复消息，并且发送通知
+        @param send_text: 通知文本
+        @param flag: True发送✅️ 样式，False发送❌️ 样式 (仅无按钮时生效)
+        @param button_list: 按钮列表，传此参数将发送持久消息，否则发送5秒自动删除消息
+        @return:
+        """
         await self.botMessage.delete_msg(self.chatId, self.replyMsgId)
         await self.botMessage.delete_msg(self.chatId, self.baseMsg.id)
-        if flag:
-            await self.botMessage.st(f"✅️ {send_text}", 'del')
+        if button_list:
+            await self.botMessage.send_message(send_text, button_list)
         else:
-            await self.botMessage.st(f"❌️ {send_text}", 'del')
+            if flag:
+                await self.botMessage.st(f"✅️ {send_text}", 'del')
+            else:
+                await self.botMessage.st(f"❌️ {send_text}", 'del')
+
+    async def delReply(self):
+        """
+        直接删除机器人的请求回复，和用户的回复消息
+        @return:
+        """
+        await self.botMessage.delete_msg(self.chatId, self.replyMsgId)
+        await self.botMessage.delete_msg(self.chatId, self.baseMsg.id)
 
     @staticmethod
     def getDeleteButton():
@@ -103,3 +121,26 @@ class BasePage:
             username = link.split("/")[-1]
             chat = await self.bot.get_chat(f"@{username}")
             return int(chat.id)
+
+    @staticmethod
+    def get_reply_messages():
+        return {
+            "fbot_reply": "回复机器人TOKEN\n请点击此条消息进行回复！",
+            "fbot_reply111": "回复机器人TOKEN111\n请点击此条消息进行回复！",
+            "change_password": "请输入新密码\n请直接回复此消息，输入您想设置的新密码（建议6位以上字符）"
+        }
+
+    async def inputError(self, url):
+        """
+        处理输入异常，重新触发回复
+        @param url: {"change_password": "错误提示信息"}
+        """
+        key = next(iter(url.keys()))
+        error_text = url.get(key)
+        reply_messages = self.get_reply_messages()
+
+        if key in reply_messages:
+            base_text = reply_messages[key]
+            # 组合原始提示和错误信息
+            full_text = f"{base_text}\n\n{error_text}"
+            await self.botMessage.send_reply(full_text)
