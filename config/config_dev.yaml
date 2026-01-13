@@ -27,3 +27,13 @@ redisKey:
   userBlank: "userBlank"
 request:
   base_url: http://127.0.0.1:10000
+
+rabbitmq:
+  host: 127.0.0.1
+  port: 5672
+  username: guest
+  password: guest
+  virtual_host: /
+  queue_name: pikpak.payment.callback
+  exchange_name: pikpak.payment.exchange
+  routing_key: payment.callback

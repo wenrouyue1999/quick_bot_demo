@@ -61,8 +61,9 @@ class HttpUtils:
                     if "application/json" in response.headers.get("Content-Type", ""):
                         result = await response.json()
                     else:
-                        result = {"text": await response.text(), "status_code": response.status}
-                    
+                        # result = {"text": await response.text(), "status_code": response.status}
+                        result = await response.text()
+
                     # 统一打印响应日志
                     log.info(f"[HttpUtils] Response {method} {full_url}: {result}")
                     return result
