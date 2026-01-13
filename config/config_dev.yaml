@@ -50,9 +50,6 @@ payment:
 rabbitmq:
   host: 127.0.0.1
   port: 5672
-  username: guest
-  password: guest
+  username: admin
+  password: manjiu521
   virtual_host: /
-  queue_name: pikpak.payment.callback
-  exchange_name: pikpak.payment.exchange
-  routing_key: payment.callback
