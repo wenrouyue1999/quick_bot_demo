@@ -51,9 +51,11 @@ async def event():
 async def main_task():
     tasks = await main()
     bot_tasks = [b.start() for b in tasks]
+    from rabbitmq.mq_consumer import start_mq_consumers
     await asyncio.gather(
         *bot_tasks,
         schedule_jobs(),
+        start_mq_consumers(),
         event()
     )
 

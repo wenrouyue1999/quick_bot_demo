@@ -34,6 +34,3 @@ rabbitmq:
   username: guest
   password: guest
   virtual_host: /
-  queue_name: pikpak.payment.callback
-  exchange_name: pikpak.payment.exchange
-  routing_key: payment.callback
