@@ -4,8 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 logs/
-*.png
 *.log
+img/order/*.png
 .env
 node_modules/
 ### STS ###

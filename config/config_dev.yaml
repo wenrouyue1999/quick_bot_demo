@@ -27,7 +27,26 @@ redisKey:
   userBlank: "userBlank"
 request:
   base_url: http://127.0.0.1:10000
-
+payment:
+  # 选择使用版本: v1 (MD5) 或 v2 (RSA)
+  version: "v1"
+  # 支付模式: post (API请求) 或 url (链接拼接)
+  mode: "url"
+  v1:
+    apiurl: 'https://baiweipay.com/'
+    pid: '1087'
+    key: 'LM88SLRdBs0Udwd2FDr8WG2rwrrg8FF8'
+    notify_url: 'http://127.0.0.1/notify_url.php'
+    return_url: 'http://127.0.0.1/return_url.php'
+    success_code: 1
+  v2:
+    apiurl: 'https://baiweipay.com/'
+    pid: '1087'
+    platform_public_key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7xa5AGQv39EWXFNlP6fU0haPX83KZbGmHLVaKgDGLF0Vybz3Du2Nn+xoPLdBlpDwXH0pdtNemTgJcMMkBBnct6ye9HPDzlvCf9umq1xehy4TFb9jYDxM8ZQwOwy7gzqSTs+NmLMJvYdS7xk+s156PmihL8kUcIJtX5qdWn8XLnJb3WgUUmuWpu48tjl2YutwLtW8rca2/xirBU9kTyyZZ33+1jgpwcaoIl3pqSTYOm6YG8FOjYgF+g6RUqrEuM4PaNB4OxVvTDh/EgtKLOY1v2eA2dxiBj0wQRkUVE1uylZPC55mv+obJpm6xrOYvw65UKvl1k4tB2Z8p5Tg0sg5rQIDAQAB'
+    merchant_private_key: 'MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQC6eJRrOKZu0S0gNBCj3Op8zlrDwXazxQzFvrT0ZUz4s4dSOzQXnfPnxf6jt7EaFW/DI040ou5EYI4l8vphah9fTnt3ayIexBjJTKfoUqhHkM+uwdXmX2n4i7IPmHl6UJvKFvhuJqKG8sIHeb9ptDcKTVHRllfxiX78MwiJBaxjXjYb2seASPSuTfJrjeaTURjLhVwpAHzua53udzpopcG7FS+4b+Vd8F7hdjBEKkXSYIsvSA9TKPNjiAsNkaF573uWd+fCC3tfj5Mw4HhdOpjbk5AAfPlEBhnCxwtCxJADb0T7X63AwEiCAhqFZqSGEU4KtNBVCf3kZawYRLj0RE53AgMBAAECggEBAIpFoaEEZ/3ipHitwu0Pgt27Uvi3u+LAKqFzsdFMUNBWp/ClMBKXMObcHd+e9femj7J+up4zd0VC6AVh8KJNxCezFcDOs4Vm2g5jBlsy98/hpO8skwV6GSWRyR7hbKrznSI0+FEN2xUAbDqI4BRs6yd7gEFPH7VexMgUu66Hg3ZGgPGeZLafOrIpt954X6Hg9j4w1jhT9sp27Hz8TWGcEplDC6mbUa75WvcrwJysM4ejst4klyLES9eurbDwSM+FipnI7+Om6rEJVHrBuCV6rU0P9LYLvKp0gI2JyMpbNJvweH8u7ag3rPoX7DVbeKw3UuXmtRaHjukVNWBCUdkHb+ECgYEA342DlVDqghherKpTOYKWxbzEoN3BKgcQYi/+Wei2QIZRpYEbRRWAzUGNikl+noIfYzJ9PAbC1M17P0RF36+uE7QSNQiFIbPoRmAyq6TKUKb2jHPKHAWwQ7r7RMcbRVt0HXZxpcOrLPRnFmfxcHwS/aQY4hq5r4MAxK0S3a/9/gcCgYEA1Yk6ozCrnpHjBPWt94ZKsuTpAdWZq+gO+gtYtFhrVuNTRctYgcff5RBmMSsdRMuwUfph6laFeGWwTpqeMcDTAe9Dgag8osxvXRpPtjXFeWyRFARL+uUfvE1fG+55LPNAoRjTpUOC6glydn0HOMAHLd/W41UrvsbEcaTLbbXKEBECgYEAmuhv5rb0WYPTjuhT1UUlfw4IXsRrRtkwRCmnodu89sdcqkflgqCc6R5kmw/EesgGQfHJkB/LQDTHE5cWqCMPiD2+ZBtsTWdiK+obEo+VVf/sVnUh9vsGIljeJtGllxEBTC04ITqOUg9lo8QRLPX9Ht9oEr2cL/+iN6cKrK14Xl8CgYEAi/pOTwWrquH1UJ4AcX893nGCcOpltzQDBVSEzIwdqTKRtvHqzgCJO655XwflQuDHb6XTo/sduWPnpE9lHjZJ3D3NIeR4AzxCUGTcFhS/o65QmC+M4yZpnFWX4EZ+dsHq/u+4ZeCQo/yXZSbmogP3cNIIGrQNXh0MT3b4x61gjRECgYEAtQtbfNXA3mKrAUHbYnTnAs/aHP+dS4OAzDt9RNbVdqcFTTVFAWBZmvafpILGO4APVGTLjkTG/zJ+giVstMWmA52g7qxwti3QsdOlC4UhrWX9yyEkiz3xorEapvpxSRYBRusBPKaJh/pD0SGeAuxOvMqm9q9DQZU/FXgPJs7QRqk='
+    notify_url: 'http://127.0.0.1/notify_url.php'
+    return_url: 'http://127.0.0.1/return_url.php'
+    success_code: 0
 rabbitmq:
   host: 127.0.0.1
   port: 5672

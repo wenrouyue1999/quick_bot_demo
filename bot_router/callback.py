@@ -7,6 +7,7 @@
 
 from page.father.father_page import FatherPage
 from page.child.child_page import ChildPage
+from page.payment.payment_page import PaymentPage
 
 
 class Callback:
@@ -24,6 +25,11 @@ class Callback:
             ["c|回复", ChildPage, ChildPage.botInput],
             ["c|子机器人下一级", ChildPage, ChildPage.botNext],
             ["c|返回", FatherPage, FatherPage.returnLast],
+
+            ["f|购买资源", PaymentPage, PaymentPage.callBuyResource],
+            ["f|支付选择", PaymentPage, PaymentPage.callPaymentSelect],
+            ["f|模拟支付", PaymentPage, PaymentPage.callPaymentCreate],
+            ["f|支付查询", PaymentPage, PaymentPage.callPaymentQuery],
         ]
 
     def get_callbacks(self):
