@@ -84,25 +84,28 @@ class BasePage:
         total_pages = math.ceil(total / page_size)
         buttons = []
 
+        # 智能判断连接符：如果 callback_prefix 已经包含参数，则使用 '&'，否则使用 '?'
+        separator = "&" if "?" in callback_prefix else "?"
+
         # 首页按钮（第一页禁用）
         first_button = InlineKeyboardButton(
             "⏮ 首页",
-            callback_data=f"{callback_prefix}?page=1&page_size={page_size}" if page > 1 else "分页异常?t=first_button"
+            callback_data=f"{callback_prefix}{separator}page=1&page_size={page_size}" if page > 1 else "分页异常?t=first_button"
         )
         # 上一页按钮（第一页禁用）
         prev_button = InlineKeyboardButton(
             "⬅️ 上一页",
-            callback_data=f"{callback_prefix}?page={page - 1}&page_size={page_size}" if page > 1 else "分页异常?t=prev_button"
+            callback_data=f"{callback_prefix}{separator}page={page - 1}&page_size={page_size}" if page > 1 else "分页异常?t=prev_button"
         )
         # 下一页按钮（最后一页禁用）
         next_button = InlineKeyboardButton(
             "下一页 ➡️",
-            callback_data=f"{callback_prefix}?page={page + 1}&page_size={page_size}" if page < total_pages else "分页异常?t=next_button"
+            callback_data=f"{callback_prefix}{separator}page={page + 1}&page_size={page_size}" if page < total_pages else "分页异常?t=next_button"
         )
         # 尾页按钮（最后一页禁用）
         last_button = InlineKeyboardButton(
             "尾页 ⏭",
-            callback_data=f"{callback_prefix}?page={total_pages}&page_size={page_size}" if page < total_pages else "分页异常?t=last_button"
+            callback_data=f"{callback_prefix}{separator}page={total_pages}&page_size={page_size}" if page < total_pages else "分页异常?t=last_button"
         )
 
         # 单行显示所有分页按钮
