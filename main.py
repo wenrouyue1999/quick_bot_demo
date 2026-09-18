@@ -10,7 +10,7 @@ from import_utils import *
 from mode.user_bot import UserBot
 from scheduler.bot_scheduler import schedule_jobs
 
-
+# 对接支付版
 async def main():
     config_load = load_config()
     api_id = config_load["key"]["api_id"]
