@@ -144,12 +144,15 @@ class FatherBot:
             log.info(f"机器人已被移除群组: {chat.title} (ID: {chat.id})")
 
         # 提取关键信息
-        chat_type = "频道" if updated.chat.type.value == "channel" else "群组"
-        chat_title = updated.chat.title
-        chat_username = f"@{updated.chat.username}" if updated.chat.username else ""
-        user_name = f"{updated.from_user.first_name} {updated.from_user.last_name or ''} {'@' + updated.from_user.username or ''}".strip()
-        user_id = updated.from_user.id
-        date = updated.date
+        chat_title = getattr(updated.chat, 'title', '') or ''
+        chat_username = f"@{updated.chat.username}" if getattr(updated.chat, 'username', None) else ""
+        from_u = getattr(updated, 'from_user', None)
+        f_name = getattr(from_u, 'first_name', '') or ''
+        l_name = getattr(from_u, 'last_name', '') or ''
+        u_name = f"@{from_u.username}" if getattr(from_u, 'username', None) else ''
+        user_name = f"{f_name} {l_name} {u_name}".strip()
+        user_id = getattr(from_u, 'id', 0)
+        date = getattr(updated, 'date', None)
         # 判断加入或退出
         try:
             action = "加入" if (updated.new_chat_member and
